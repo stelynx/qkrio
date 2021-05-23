@@ -1,31 +1,32 @@
 import 'package:flutter/cupertino.dart';
 
 import '../models/qkrio_dish.dart';
-import '../models/qkrio_timer.dart';
 import '../theme/style.dart';
 
-class QkrioAddTimerDialog extends StatefulWidget {
-  final void Function(QkrioTimer) onAdd;
+class QkrioAddFavouriteDialog extends StatefulWidget {
+  final void Function(QkrioDish) onAdd;
 
-  const QkrioAddTimerDialog({Key? key, required this.onAdd}) : super(key: key);
+  const QkrioAddFavouriteDialog({Key? key, required this.onAdd})
+      : super(key: key);
 
   @override
-  _QkrioAddTimerDialogState createState() => _QkrioAddTimerDialogState();
+  _QkrioAddFavouriteDialogState createState() =>
+      _QkrioAddFavouriteDialogState();
 }
 
-class _QkrioAddTimerDialogState extends State<QkrioAddTimerDialog> {
+class _QkrioAddFavouriteDialogState extends State<QkrioAddFavouriteDialog> {
   String _timerTitle = '';
   Duration _timerDuration = Duration.zero;
 
   @override
   Widget build(BuildContext context) {
     return CupertinoAlertDialog(
-      title: const Text('Add Timer'),
+      title: const Text('Add New Favourite'),
       content: Column(
         children: <Widget>[
           const SizedBox(height: 10.0),
           CupertinoTextField(
-            placeholder: 'I am cooking ...',
+            placeholder: 'Dish name',
             onChanged: (String s) => setState(() => _timerTitle = s),
           ),
           const SizedBox(height: 10.0),
@@ -59,12 +60,9 @@ class _QkrioAddTimerDialogState extends State<QkrioAddTimerDialog> {
           child: const Text('Add'),
           isDefaultAction: true,
           onPressed: () {
-            widget.onAdd(QkrioTimer(
-              dish: QkrioDish(
-                dishName: _timerTitle,
-                duration: _timerDuration,
-              ),
-              started: DateTime.now(),
+            widget.onAdd(QkrioDish(
+              dishName: _timerTitle,
+              duration: _timerDuration,
             ));
             Navigator.of(context).pop();
           },

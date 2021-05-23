@@ -29,9 +29,10 @@ class QkrioTimerTile extends StatelessWidget {
                 style: QkrioStyle.timerTextClock,
               ),
               Text(
-                qkrioTimer.dishName,
+                qkrioTimer.dish.dishName,
                 style: QkrioStyle.timerTextName,
               ),
+              const SizedBox(height: 8.0),
             ],
           ),
           CupertinoButton(

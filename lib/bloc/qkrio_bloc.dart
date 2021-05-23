@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
+import '../models/qkrio_dish.dart';
 import '../models/qkrio_timer.dart';
 import '../services/local_storage.dart';
 import '../services/notification.dart';
@@ -34,6 +35,15 @@ class QkrioBloc extends Bloc<QkrioEvent, QkrioState> {
     BlocProvider.of<QkrioBloc>(context, listen: false).add(CancelTimer(timer));
   }
 
+  static void addFavourite(BuildContext context, QkrioDish dish) {
+    BlocProvider.of<QkrioBloc>(context, listen: false).add(AddFavourite(dish));
+  }
+
+  static void deleteFavourite(BuildContext context, QkrioDish dish) {
+    BlocProvider.of<QkrioBloc>(context, listen: false)
+        .add(DeleteFavourite(dish));
+  }
+
   @override
   Stream<QkrioState> mapEventToState(
     QkrioEvent event,
@@ -41,7 +51,10 @@ class QkrioBloc extends Bloc<QkrioEvent, QkrioState> {
     if (event is Initialize) {
       final List<QkrioTimer> savedTimers =
           await _localStorageService.getTimers();
+      final List<QkrioDish> savedFavourites =
+          await _localStorageService.getFavourites();
       state.runningTimers.addAll(savedTimers);
+      state.favouriteDishes.addAll(savedFavourites);
       await _notificationService.init(
           onSelectNotification: (String? payload) async =>
               add(NotificationSelected(payload)));
@@ -58,6 +71,14 @@ class QkrioBloc extends Bloc<QkrioEvent, QkrioState> {
       await _localStorageService.saveTimers(state.runningTimers);
       await _notificationService.cancelNotificationForTimer(event.timer);
       if (state.runningTimers.isEmpty) _stopClock();
+      yield state.copyWith();
+    } else if (event is AddFavourite) {
+      state.favouriteDishes.add(event.dish);
+      await _localStorageService.saveFavourites(state.favouriteDishes);
+      yield state.copyWith();
+    } else if (event is DeleteFavourite) {
+      state.favouriteDishes.remove(event.dish);
+      await _localStorageService.saveFavourites(state.favouriteDishes);
       yield state.copyWith();
     } else if (event is RefreshUi) {
       final List<QkrioTimer> remainingTimers = <QkrioTimer>[];

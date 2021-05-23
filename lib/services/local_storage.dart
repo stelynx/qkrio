@@ -1,9 +1,11 @@
 import 'package:localstorage/localstorage.dart';
 
+import '../models/qkrio_dish.dart';
 import '../models/qkrio_timer.dart';
 
 class LocalStorageService {
   static const String _keyTimers = 'timers';
+  static const String _keyFavourites = 'favourites';
 
   static final LocalStorageService _instance = LocalStorageService._();
   final LocalStorage _storage;
@@ -35,6 +37,32 @@ class LocalStorageService {
         ? <QkrioTimer>[]
         : timers
             .map<QkrioTimer>((timer) => QkrioTimer.fromLocalStorage(timer))
+            .toList();
+  }
+
+  Future<bool> saveFavourites(List<QkrioDish> favourites) async {
+    if (!(await _storage.ready)) return false;
+
+    await _storage.setItem(
+      _keyFavourites,
+      favourites
+          .map<Map<String, dynamic>>((QkrioDish dish) => dish.toLocalStorage())
+          .toList(),
+    );
+
+    return true;
+  }
+
+  Future<List<QkrioDish>> getFavourites() async {
+    if (!(await _storage.ready)) return <QkrioDish>[];
+
+    final favourites = await _storage.getItem(_keyFavourites);
+
+    return favourites == null
+        ? <QkrioDish>[]
+        : favourites
+            .map<QkrioDish>(
+                (favourite) => QkrioDish.fromLocalStorage(favourite))
             .toList();
   }
 }

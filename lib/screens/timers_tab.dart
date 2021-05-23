@@ -51,9 +51,17 @@ class TimersTab extends StatelessWidget {
                         children: [
                           Icon(
                             CupertinoIcons.add_circled,
-                            size: MediaQuery.of(context).size.width / 5,
+                            size: CupertinoTheme.of(context)
+                                    .textTheme
+                                    .textStyle
+                                    .fontSize! *
+                                5,
                           ),
-                          const Text('Start by adding a timer'),
+                          const SizedBox(height: 10.0),
+                          Text(
+                            'Start by adding a timer'.toUpperCase(),
+                            style: const TextStyle(fontWeight: FontWeight.w300),
+                          ),
                         ],
                       ),
                       onTap: () => _openAddNewTimer(context),

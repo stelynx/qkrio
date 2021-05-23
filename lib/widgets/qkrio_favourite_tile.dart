@@ -1,0 +1,97 @@
+import 'package:flutter/cupertino.dart';
+
+import '../models/qkrio_dish.dart';
+
+class QkrioFavouriteTile extends StatefulWidget {
+  final QkrioDish dish;
+  final VoidCallback onDelete;
+
+  const QkrioFavouriteTile({
+    Key? key,
+    required this.dish,
+    required this.onDelete,
+  }) : super(key: key);
+
+  @override
+  _QkrioFavouriteTileState createState() => _QkrioFavouriteTileState();
+}
+
+class _QkrioFavouriteTileState extends State<QkrioFavouriteTile> {
+  bool _isSelected = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: _isSelected ? CupertinoColors.lightBackgroundGray : null,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 3 / 4,
+                  ),
+                  child: Text(
+                    widget.dish.dishName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: CupertinoTheme.of(context)
+                              .textTheme
+                              .textStyle
+                              .fontSize! *
+                          1.5,
+                      fontWeight: FontWeight.w200,
+                    ),
+                  ),
+                ),
+                Text(widget.dish.presentableDuration()),
+                const SizedBox(height: 6.0),
+              ],
+            ),
+            CupertinoButton(
+              padding: EdgeInsets.zero,
+              child: const Icon(
+                CupertinoIcons.list_bullet,
+              ),
+              onPressed: () async {
+                setState(() => _isSelected = true);
+                await _openTimerOptions();
+                setState(() => _isSelected = false);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _openTimerOptions() {
+    return showCupertinoModalPopup<void>(
+        context: context,
+        builder: (BuildContext ctx) {
+          return CupertinoActionSheet(
+            title: Text(widget.dish.dishName),
+            actions: <CupertinoActionSheetAction>[
+              CupertinoActionSheetAction(
+                onPressed: () {
+                  widget.onDelete();
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Delete'),
+                isDestructiveAction: true,
+              ),
+            ],
+            cancelButton: CupertinoActionSheetAction(
+              child: const Text('Cancel'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          );
+        });
+  }
+}

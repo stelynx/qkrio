@@ -1,35 +1,33 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
+import 'qkrio_dish.dart';
+
 @immutable
 class QkrioTimer extends Equatable {
-  final String dishName;
+  final QkrioDish dish;
   final DateTime started;
-  final Duration duration;
 
   bool get isOver =>
-      DateTime.now().difference(started).inSeconds == duration.inSeconds;
+      DateTime.now().difference(started).inSeconds >= dish.duration.inSeconds;
   bool get isNotOver => !isOver;
 
   const QkrioTimer({
-    required this.dishName,
+    required this.dish,
     required this.started,
-    required this.duration,
   });
 
   factory QkrioTimer.fromLocalStorage(Map<String, dynamic> json) {
     return QkrioTimer(
-      dishName: json['dish_name'],
+      dish: QkrioDish.fromLocalStorage(json['dish']),
       started: DateTime.fromMillisecondsSinceEpoch(json['started']),
-      duration: Duration(seconds: json['duration']),
     );
   }
 
   Map<String, dynamic> toLocalStorage() {
     return <String, dynamic>{
-      'dish_name': dishName,
+      'dish': dish.toLocalStorage(),
       'started': started.millisecondsSinceEpoch,
-      'duration': duration.inSeconds,
     };
   }
 
@@ -38,7 +36,7 @@ class QkrioTimer extends Equatable {
 
     final DateTime now = DateTime.now();
     final int secsPassed = now.difference(started).inSeconds;
-    int secsToGo = duration.inSeconds - secsPassed;
+    int secsToGo = dish.duration.inSeconds - secsPassed;
 
     final int hours = (secsToGo / 3600).floor();
     if (hours > 0) {
@@ -58,5 +56,5 @@ class QkrioTimer extends Equatable {
   }
 
   @override
-  List<Object?> get props => [dishName, started, duration];
+  List<Object?> get props => [dish, started];
 }

@@ -19,7 +19,7 @@ class NotificationService {
     const AndroidInitializationSettings androidInitializationSettings =
         AndroidInitializationSettings('app_icon');
 
-    final IOSInitializationSettings iosInitializationSettings =
+    const IOSInitializationSettings iosInitializationSettings =
         IOSInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -27,13 +27,9 @@ class NotificationService {
       defaultPresentAlert: true,
       defaultPresentBadge: true,
       defaultPresentSound: true,
-      onDidReceiveLocalNotification:
-          (int id, String? title, String? body, String? payload) async {
-        print('id: $id, title: $title, body: $body, payload: $payload');
-      },
     );
 
-    final InitializationSettings initializationSettings =
+    const InitializationSettings initializationSettings =
         InitializationSettings(
       android: androidInitializationSettings,
       iOS: iosInitializationSettings,
@@ -69,9 +65,9 @@ class NotificationService {
 
     await _flutterLocalNotificationsPlugin.zonedSchedule(
       timer.hashCode,
-      timer.dishName,
+      timer.dish.dishName,
       'has just finished cooking',
-      tz.TZDateTime.from(timer.started, tz.local).add(timer.duration),
+      tz.TZDateTime.from(timer.started, tz.local).add(timer.dish.duration),
       notificationDetails,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
