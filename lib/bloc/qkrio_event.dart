@@ -11,8 +11,9 @@ class Initialize extends QkrioEvent {
 
 class AddTimer extends QkrioEvent {
   final QkrioTimer timer;
+  final bool showNotification;
 
-  const AddTimer(this.timer);
+  const AddTimer(this.timer, {required this.showNotification});
 }
 
 class CancelTimer extends QkrioEvent {

@@ -26,11 +26,11 @@ class QkrioTimerTile extends StatelessWidget {
             children: <Widget>[
               Text(
                 qkrioTimer.presentableTime(),
-                style: QkrioStyle.timerTextClock,
+                style: QkrioStyle.timerTextClock(context),
               ),
               Text(
                 qkrioTimer.dish.dishName,
-                style: QkrioStyle.timerTextName,
+                style: QkrioStyle.timerTextName(context),
               ),
               const SizedBox(height: 8.0),
             ],

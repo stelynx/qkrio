@@ -4,11 +4,13 @@ import '../models/qkrio_dish.dart';
 
 class QkrioFavouriteTile extends StatefulWidget {
   final QkrioDish dish;
+  final VoidCallback onTimerStart;
   final VoidCallback onDelete;
 
   const QkrioFavouriteTile({
     Key? key,
     required this.dish,
+    required this.onTimerStart,
     required this.onDelete,
   }) : super(key: key);
 
@@ -40,17 +42,21 @@ class _QkrioFavouriteTileState extends State<QkrioFavouriteTile> {
                     widget.dish.dishName,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: CupertinoTheme.of(context)
-                              .textTheme
-                              .textStyle
-                              .fontSize! *
-                          1.5,
-                      fontWeight: FontWeight.w200,
-                    ),
+                    style:
+                        CupertinoTheme.of(context).textTheme.textStyle.copyWith(
+                              fontSize: CupertinoTheme.of(context)
+                                      .textTheme
+                                      .textStyle
+                                      .fontSize! *
+                                  1.5,
+                              fontWeight: FontWeight.w200,
+                            ),
                   ),
                 ),
-                Text(widget.dish.presentableDuration()),
+                Text(
+                  widget.dish.presentableDuration(),
+                  style: CupertinoTheme.of(context).textTheme.textStyle,
+                ),
                 const SizedBox(height: 6.0),
               ],
             ),
@@ -78,6 +84,13 @@ class _QkrioFavouriteTileState extends State<QkrioFavouriteTile> {
           return CupertinoActionSheet(
             title: Text(widget.dish.dishName),
             actions: <CupertinoActionSheetAction>[
+              CupertinoActionSheetAction(
+                onPressed: () {
+                  widget.onTimerStart();
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Start timer'),
+              ),
               CupertinoActionSheetAction(
                 onPressed: () {
                   widget.onDelete();

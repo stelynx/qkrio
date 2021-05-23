@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/qkrio_bloc.dart';
 import '../models/qkrio_dish.dart';
+import '../models/qkrio_timer.dart';
+import '../theme/style.dart';
 import '../widgets/qkrio_add_favourite_dialog.dart';
 import '../widgets/qkrio_favourite_tile.dart';
 
@@ -17,6 +19,14 @@ class FavouritesTab extends StatelessWidget {
             state.favouriteDishes.map<Widget>((QkrioDish dish) {
           return QkrioFavouriteTile(
             dish: dish,
+            onTimerStart: () => QkrioBloc.addTimer(
+              context,
+              QkrioTimer(
+                dish: dish,
+                started: DateTime.now(),
+              ),
+              showNotification: true,
+            ),
             onDelete: () => QkrioBloc.deleteFavourite(context, dish),
           );
         }).toList();
@@ -56,7 +66,7 @@ class FavouritesTab extends StatelessWidget {
                         const SizedBox(height: 10.0),
                         Text(
                           'You have no favourites ... Yet!'.toUpperCase(),
-                          style: const TextStyle(fontWeight: FontWeight.w300),
+                          style: QkrioStyle.capsInfoText(context),
                         ),
                       ],
                     ),

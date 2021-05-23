@@ -5,6 +5,24 @@ import 'package:timezone/timezone.dart' as tz;
 import '../models/qkrio_timer.dart';
 
 class NotificationService {
+  static const AndroidNotificationDetails _androidNotificationDetails =
+      AndroidNotificationDetails(
+    'QKRIO_NOTIFICATIONS',
+    'QKRIO_NOTIFICATIONS',
+    'QKRIO_NOTIFICATIONS',
+  );
+  static const IOSNotificationDetails _iosNotificationDetails =
+      IOSNotificationDetails(
+    presentAlert: true,
+    presentBadge: true,
+    presentSound: true,
+  );
+  static const NotificationDetails _notificationDetails = NotificationDetails(
+    android: _androidNotificationDetails,
+    iOS: _iosNotificationDetails,
+    macOS: null,
+  );
+
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   static final NotificationService _instance = NotificationService._();
@@ -44,31 +62,24 @@ class NotificationService {
     );
   }
 
-  Future<void> scheduleNotificationForTimer(QkrioTimer timer) async {
-    const AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails(
-      'QKRIO_NOTIFICATIONS',
-      'QKRIO_NOTIFICATIONS',
-      'QKRIO_NOTIFICATIONS',
+  Future<void> showNotificationForTimer(QkrioTimer timer) async {
+    await _flutterLocalNotificationsPlugin.show(
+      timer.hashCode,
+      timer.dish.dishName,
+      'will cook for ${timer.dish.presentableDuration()}',
+      _notificationDetails,
+      // sending timer.hashCode as payload would cancel timer if user clicks on notification
+      payload: null,
     );
-    const IOSNotificationDetails iosNotificationDetails =
-        IOSNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-    );
-    const NotificationDetails notificationDetails = NotificationDetails(
-      android: androidNotificationDetails,
-      iOS: iosNotificationDetails,
-      macOS: null,
-    );
+  }
 
+  Future<void> scheduleNotificationForTimer(QkrioTimer timer) async {
     await _flutterLocalNotificationsPlugin.zonedSchedule(
       timer.hashCode,
       timer.dish.dishName,
       'has just finished cooking',
       tz.TZDateTime.from(timer.started, tz.local).add(timer.dish.duration),
-      notificationDetails,
+      _notificationDetails,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       androidAllowWhileIdle: true,

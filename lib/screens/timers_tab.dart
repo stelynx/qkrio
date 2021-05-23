@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/qkrio_bloc.dart';
 import '../models/qkrio_timer.dart';
+import '../theme/style.dart';
 import '../widgets/qkrio_add_timer_dialog.dart';
 import '../widgets/qkrio_timer_tile.dart';
 
@@ -60,7 +61,7 @@ class TimersTab extends StatelessWidget {
                           const SizedBox(height: 10.0),
                           Text(
                             'Start by adding a timer'.toUpperCase(),
-                            style: const TextStyle(fontWeight: FontWeight.w300),
+                            style: QkrioStyle.capsInfoText(context),
                           ),
                         ],
                       ),

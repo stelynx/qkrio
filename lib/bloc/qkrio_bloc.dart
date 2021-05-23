@@ -27,8 +27,15 @@ class QkrioBloc extends Bloc<QkrioEvent, QkrioState> {
     add(const Initialize());
   }
 
-  static void addTimer(BuildContext context, QkrioTimer timer) {
-    BlocProvider.of<QkrioBloc>(context, listen: false).add(AddTimer(timer));
+  static void addTimer(
+    BuildContext context,
+    QkrioTimer timer, {
+    bool showNotification = false,
+  }) {
+    BlocProvider.of<QkrioBloc>(context, listen: false).add(AddTimer(
+      timer,
+      showNotification: showNotification,
+    ));
   }
 
   static void cancelTimer(BuildContext context, QkrioTimer timer) {
@@ -65,6 +72,9 @@ class QkrioBloc extends Bloc<QkrioEvent, QkrioState> {
       await _localStorageService.saveTimers(state.runningTimers);
       await _notificationService.scheduleNotificationForTimer(event.timer);
       _startClock();
+      if (event.showNotification) {
+        await _notificationService.showNotificationForTimer(event.timer);
+      }
       yield state.copyWith();
     } else if (event is CancelTimer) {
       state.runningTimers.remove(event.timer);
