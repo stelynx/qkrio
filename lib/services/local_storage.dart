@@ -2,12 +2,17 @@ import 'package:localstorage/localstorage.dart';
 
 import '../models/qkrio_timer.dart';
 
-abstract class LocalStorageService {
+class LocalStorageService {
   static const String _keyTimers = 'timers';
 
-  static final LocalStorage _storage = LocalStorage('qkrio_storage');
+  static final LocalStorageService _instance = LocalStorageService._();
+  final LocalStorage _storage;
 
-  static Future<bool> saveTimers(List<QkrioTimer> timers) async {
+  factory LocalStorageService() => _instance;
+
+  LocalStorageService._() : _storage = LocalStorage('qkrio_storage');
+
+  Future<bool> saveTimers(List<QkrioTimer> timers) async {
     if (!(await _storage.ready)) return false;
 
     await _storage.setItem(
@@ -21,13 +26,10 @@ abstract class LocalStorageService {
     return true;
   }
 
-  static Future<List<QkrioTimer>> getTimers() async {
-    print('getting timers');
+  Future<List<QkrioTimer>> getTimers() async {
     if (!(await _storage.ready)) return <QkrioTimer>[];
-    print('here');
 
     final timers = await _storage.getItem(_keyTimers);
-    print(timers);
 
     return timers == null
         ? <QkrioTimer>[]

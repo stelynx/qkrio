@@ -24,3 +24,9 @@ class CancelTimer extends QkrioEvent {
 class RefreshUi extends QkrioEvent {
   const RefreshUi();
 }
+
+class NotificationSelected extends QkrioEvent {
+  final String? notificationPayload;
+
+  const NotificationSelected(this.notificationPayload);
+}

@@ -1,7 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
 @immutable
-class QkrioTimer {
+class QkrioTimer extends Equatable {
   final String dishName;
   final DateTime started;
   final Duration duration;
@@ -57,13 +58,5 @@ class QkrioTimer {
   }
 
   @override
-  bool operator ==(Object other) {
-    return other is QkrioTimer &&
-        other.dishName == dishName &&
-        other.started == started &&
-        other.duration == duration;
-  }
-
-  @override
-  int get hashCode => dishName.hashCode;
+  List<Object?> get props => [dishName, started, duration];
 }

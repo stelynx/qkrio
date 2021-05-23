@@ -7,14 +7,22 @@ import 'package:meta/meta.dart';
 
 import '../models/qkrio_timer.dart';
 import '../services/local_storage.dart';
+import '../services/notification.dart';
 
 part 'qkrio_event.dart';
 part 'qkrio_state.dart';
 
 class QkrioBloc extends Bloc<QkrioEvent, QkrioState> {
+  final LocalStorageService _localStorageService;
+  final NotificationService _notificationService;
   Timer? _uiRefreshTimer;
 
-  QkrioBloc() : super(QkrioState.initial()) {
+  QkrioBloc(
+      {required LocalStorageService localStorageService,
+      required NotificationService notificationService})
+      : _localStorageService = localStorageService,
+        _notificationService = notificationService,
+        super(QkrioState.initial()) {
     add(const Initialize());
   }
 
@@ -32,18 +40,23 @@ class QkrioBloc extends Bloc<QkrioEvent, QkrioState> {
   ) async* {
     if (event is Initialize) {
       final List<QkrioTimer> savedTimers =
-          await LocalStorageService.getTimers();
+          await _localStorageService.getTimers();
       state.runningTimers.addAll(savedTimers);
+      await _notificationService.init(
+          onSelectNotification: (String? payload) async =>
+              add(NotificationSelected(payload)));
       yield state.copyWith();
       if (savedTimers.isNotEmpty) _startClock();
     } else if (event is AddTimer) {
       state.runningTimers.add(event.timer);
-      await LocalStorageService.saveTimers(state.runningTimers);
+      await _localStorageService.saveTimers(state.runningTimers);
+      await _notificationService.scheduleNotificationForTimer(event.timer);
       _startClock();
       yield state.copyWith();
     } else if (event is CancelTimer) {
       state.runningTimers.remove(event.timer);
-      await LocalStorageService.saveTimers(state.runningTimers);
+      await _localStorageService.saveTimers(state.runningTimers);
+      await _notificationService.cancelNotificationForTimer(event.timer);
       if (state.runningTimers.isEmpty) _stopClock();
       yield state.copyWith();
     } else if (event is RefreshUi) {
@@ -55,15 +68,23 @@ class QkrioBloc extends Bloc<QkrioEvent, QkrioState> {
           remainingTimers.add(runningTimer);
         } else {
           shouldUpdateLocalStorage = true;
-          // TODO push notification and sound
         }
       }
 
       if (shouldUpdateLocalStorage) {
-        await LocalStorageService.saveTimers(remainingTimers);
+        await _localStorageService.saveTimers(remainingTimers);
       }
 
       yield state.copyWith(runningTimers: remainingTimers);
+    } else if (event is NotificationSelected) {
+      if (event.notificationPayload == null) return;
+
+      try {
+        final QkrioTimer timerToCancel = state.runningTimers.firstWhere(
+            (QkrioTimer timer) =>
+                timer.hashCode.toString() == event.notificationPayload);
+        add(CancelTimer(timerToCancel));
+      } on StateError {}
     }
   }
 

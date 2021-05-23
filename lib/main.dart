@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/qkrio_bloc.dart';
 import 'screens/favourites_tab.dart';
 import 'screens/timers_tab.dart';
+import 'services/local_storage.dart';
+import 'services/notification.dart';
 import 'theme/theme.dart';
 
 void main() async {
@@ -21,7 +23,10 @@ class QkrioApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: qkrioTheme,
       home: BlocProvider(
-        create: (_) => QkrioBloc(),
+        create: (_) => QkrioBloc(
+          localStorageService: LocalStorageService(),
+          notificationService: NotificationService(),
+        ),
         child: const QkrioHome(),
         lazy: false,
       ),
