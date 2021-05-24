@@ -42,6 +42,11 @@ class QkrioBloc extends Bloc<QkrioEvent, QkrioState> {
     BlocProvider.of<QkrioBloc>(context, listen: false).add(CancelTimer(timer));
   }
 
+  static void toggleFavouriteOnTimer(BuildContext context, QkrioTimer timer) {
+    BlocProvider.of<QkrioBloc>(context, listen: false)
+        .add(ToggleFavouriteOnTimer(timer));
+  }
+
   static void addFavourite(BuildContext context, QkrioDish dish) {
     BlocProvider.of<QkrioBloc>(context, listen: false).add(AddFavourite(dish));
   }
@@ -81,6 +86,20 @@ class QkrioBloc extends Bloc<QkrioEvent, QkrioState> {
       await _localStorageService.saveTimers(state.runningTimers);
       await _notificationService.cancelNotificationForTimer(event.timer);
       if (state.runningTimers.isEmpty) _stopClock();
+      yield state.copyWith();
+    } else if (event is ToggleFavouriteOnTimer) {
+      add(event.timer.dish.isFavourite
+          ? DeleteFavourite(event.timer.dish)
+          : AddFavourite(event.timer.dish));
+
+      state.runningTimers[state.runningTimers.indexOf(event.timer)] =
+          QkrioTimer(
+        dish: QkrioDish(
+            dishName: event.timer.dish.dishName,
+            duration: event.timer.dish.duration,
+            isFavourite: !event.timer.dish.isFavourite),
+        started: event.timer.started,
+      );
       yield state.copyWith();
     } else if (event is AddFavourite) {
       state.favouriteDishes.add(event.dish);

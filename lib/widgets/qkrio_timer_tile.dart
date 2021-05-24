@@ -5,11 +5,13 @@ import '../theme/style.dart';
 
 class QkrioTimerTile extends StatelessWidget {
   final QkrioTimer qkrioTimer;
+  final VoidCallback onToggleFavourite;
   final VoidCallback onDelete;
 
   const QkrioTimerTile({
     Key? key,
     required this.qkrioTimer,
+    required this.onToggleFavourite,
     required this.onDelete,
   }) : super(key: key);
 
@@ -35,13 +37,24 @@ class QkrioTimerTile extends StatelessWidget {
               const SizedBox(height: 8.0),
             ],
           ),
-          CupertinoButton(
-            padding: EdgeInsets.zero,
-            child: const Icon(
-              CupertinoIcons.xmark,
-              color: CupertinoColors.destructiveRed,
-            ),
-            onPressed: onDelete,
+          Row(
+            children: <Widget>[
+              CupertinoButton(
+                padding: EdgeInsets.zero,
+                child: Icon(qkrioTimer.dish.isFavourite
+                    ? CupertinoIcons.star_fill
+                    : CupertinoIcons.star),
+                onPressed: onToggleFavourite,
+              ),
+              CupertinoButton(
+                padding: EdgeInsets.zero,
+                child: const Icon(
+                  CupertinoIcons.xmark,
+                  color: CupertinoColors.destructiveRed,
+                ),
+                onPressed: onDelete,
+              ),
+            ],
           ),
         ],
       ),

@@ -45,5 +45,5 @@ class QkrioDish extends Equatable {
   }
 
   @override
-  List<Object?> get props => [dishName, duration, isFavourite];
+  List<Object?> get props => [dishName, duration];
 }

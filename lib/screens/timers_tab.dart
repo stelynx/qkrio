@@ -18,6 +18,8 @@ class TimersTab extends StatelessWidget {
             state.runningTimers.map<Widget>((QkrioTimer timer) {
           return QkrioTimerTile(
             qkrioTimer: timer,
+            onToggleFavourite: () =>
+                QkrioBloc.toggleFavouriteOnTimer(context, timer),
             onDelete: () => QkrioBloc.cancelTimer(context, timer),
           );
         }).toList();

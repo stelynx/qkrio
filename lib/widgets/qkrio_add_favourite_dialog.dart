@@ -63,6 +63,7 @@ class _QkrioAddFavouriteDialogState extends State<QkrioAddFavouriteDialog> {
             widget.onAdd(QkrioDish(
               dishName: _timerTitle,
               duration: _timerDuration,
+              isFavourite: true,
             ));
             Navigator.of(context).pop();
           },

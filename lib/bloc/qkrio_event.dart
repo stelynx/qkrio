@@ -22,6 +22,12 @@ class CancelTimer extends QkrioEvent {
   const CancelTimer(this.timer);
 }
 
+class ToggleFavouriteOnTimer extends QkrioEvent {
+  final QkrioTimer timer;
+
+  const ToggleFavouriteOnTimer(this.timer);
+}
+
 class AddFavourite extends QkrioEvent {
   final QkrioDish dish;
 

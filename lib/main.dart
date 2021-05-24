@@ -42,9 +42,11 @@ class QkrioHome extends StatelessWidget {
     return BlocBuilder<QkrioBloc, QkrioState>(
       builder: (context, state) {
         if (!state.isLoaded) {
-          return const Scaffold(
+          return Scaffold(
             body: Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: CupertinoTheme.of(context).primaryColor,
+              ),
             ),
           );
         }
