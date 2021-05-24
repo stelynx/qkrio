@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../models/qkrio_dish.dart';
 import '../theme/style.dart';
+import 'util/qkrio_dialog_action.dart';
 
 class QkrioAddFavouriteDialog extends StatefulWidget {
   final void Function(QkrioDish) onAdd;
@@ -15,7 +16,8 @@ class QkrioAddFavouriteDialog extends StatefulWidget {
 }
 
 class _QkrioAddFavouriteDialogState extends State<QkrioAddFavouriteDialog> {
-  String _timerTitle = '';
+  String _dishName = '';
+  String _note = '';
   Duration _timerDuration = Duration.zero;
 
   @override
@@ -27,7 +29,12 @@ class _QkrioAddFavouriteDialogState extends State<QkrioAddFavouriteDialog> {
           const SizedBox(height: 10.0),
           CupertinoTextField(
             placeholder: 'Dish name',
-            onChanged: (String s) => setState(() => _timerTitle = s),
+            onChanged: (String s) => setState(() => _dishName = s),
+          ),
+          const SizedBox(height: 10.0),
+          CupertinoTextField(
+            placeholder: 'Note (Optional)',
+            onChanged: (String s) => setState(() => _note = s),
           ),
           const SizedBox(height: 10.0),
           Container(
@@ -49,20 +56,23 @@ class _QkrioAddFavouriteDialogState extends State<QkrioAddFavouriteDialog> {
           ),
         ],
       ),
-      actions: <CupertinoDialogAction>[
-        CupertinoDialogAction(
-          child: const Text('Cancel'),
+      actions: <QkrioDialogAction>[
+        QkrioDialogAction(
+          text: 'Cancel',
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
-        CupertinoDialogAction(
-          child: const Text('Add'),
+        QkrioDialogAction(
+          text: 'Add',
           isDefaultAction: true,
+          enabled: _timerDuration.inSeconds > 10 && _dishName.trim().isNotEmpty,
           onPressed: () {
+            final String noteTrimmed = _note.trim();
             widget.onAdd(QkrioDish(
-              dishName: _timerTitle,
+              dishName: _dishName,
               duration: _timerDuration,
+              note: noteTrimmed.isNotEmpty ? noteTrimmed : null,
               isFavourite: true,
             ));
             Navigator.of(context).pop();

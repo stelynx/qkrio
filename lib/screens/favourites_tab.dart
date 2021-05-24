@@ -25,7 +25,7 @@ class FavouritesTab extends StatelessWidget {
                 dish: dish,
                 started: DateTime.now(),
               ),
-              showNotification: true,
+              startedFromFavourites: true,
             ),
             onDelete: () => QkrioBloc.deleteFavourite(context, dish),
           );

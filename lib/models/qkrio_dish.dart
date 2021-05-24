@@ -5,11 +5,13 @@ import 'package:flutter/foundation.dart';
 class QkrioDish extends Equatable {
   final String dishName;
   final Duration duration;
+  final String? note;
   final bool isFavourite;
 
   const QkrioDish({
     required this.dishName,
     required this.duration,
+    this.note,
     this.isFavourite = false,
   });
 
@@ -17,6 +19,7 @@ class QkrioDish extends Equatable {
     return QkrioDish(
       dishName: json['dish_name'],
       duration: Duration(seconds: json['duration']),
+      note: json['note'],
       isFavourite: json['is_favourite'],
     );
   }
@@ -25,6 +28,7 @@ class QkrioDish extends Equatable {
     return <String, dynamic>{
       'dish_name': dishName,
       'duration': duration.inSeconds,
+      'note': note,
       'is_favourite': isFavourite,
     };
   }

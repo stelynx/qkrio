@@ -30,11 +30,11 @@ class QkrioBloc extends Bloc<QkrioEvent, QkrioState> {
   static void addTimer(
     BuildContext context,
     QkrioTimer timer, {
-    bool showNotification = false,
+    bool startedFromFavourites = false,
   }) {
     BlocProvider.of<QkrioBloc>(context, listen: false).add(AddTimer(
       timer,
-      showNotification: showNotification,
+      startedFromFavourites: startedFromFavourites,
     ));
   }
 
@@ -77,8 +77,12 @@ class QkrioBloc extends Bloc<QkrioEvent, QkrioState> {
       await _localStorageService.saveTimers(state.runningTimers);
       await _notificationService.scheduleNotificationForTimer(event.timer);
       _startClock();
-      if (event.showNotification) {
+      if (event.startedFromFavourites) {
         await _notificationService.showNotificationForTimer(event.timer);
+      } else {
+        if (event.timer.dish.isFavourite) {
+          add(AddFavourite(event.timer.dish));
+        }
       }
       yield state.copyWith();
     } else if (event is CancelTimer) {

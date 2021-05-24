@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../models/qkrio_dish.dart';
 import '../models/qkrio_timer.dart';
 import '../theme/style.dart';
+import 'util/qkrio_dialog_action.dart';
 
 class QkrioAddTimerDialog extends StatefulWidget {
   final void Function(QkrioTimer) onAdd;
@@ -15,7 +16,9 @@ class QkrioAddTimerDialog extends StatefulWidget {
 
 class _QkrioAddTimerDialogState extends State<QkrioAddTimerDialog> {
   String _timerTitle = '';
+  String _note = '';
   Duration _timerDuration = Duration.zero;
+  bool _isFavourite = false;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +30,11 @@ class _QkrioAddTimerDialogState extends State<QkrioAddTimerDialog> {
           CupertinoTextField(
             placeholder: 'I am cooking ...',
             onChanged: (String s) => setState(() => _timerTitle = s),
+          ),
+          const SizedBox(height: 10.0),
+          CupertinoTextField(
+            placeholder: 'Note (Optional)',
+            onChanged: (String s) => setState(() => _note = s),
           ),
           const SizedBox(height: 10.0),
           Container(
@@ -46,23 +54,40 @@ class _QkrioAddTimerDialogState extends State<QkrioAddTimerDialog> {
               },
             ),
           ),
+          const SizedBox(height: 10.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              const Text('Save to favourites'),
+              CupertinoSwitch(
+                value: _isFavourite,
+                onChanged: (bool v) => setState(() => _isFavourite = v),
+                activeColor: CupertinoTheme.of(context).primaryColor,
+              ),
+            ],
+          ),
         ],
       ),
-      actions: <CupertinoDialogAction>[
-        CupertinoDialogAction(
-          child: const Text('Cancel'),
+      actions: <QkrioDialogAction>[
+        QkrioDialogAction(
+          text: 'Cancel',
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
-        CupertinoDialogAction(
-          child: const Text('Add'),
+        QkrioDialogAction(
+          text: 'Start',
           isDefaultAction: true,
+          enabled:
+              _timerDuration.inSeconds > 10 && _timerTitle.trim().isNotEmpty,
           onPressed: () {
+            final String noteTrimmed = _note.trim();
             widget.onAdd(QkrioTimer(
               dish: QkrioDish(
                 dishName: _timerTitle,
                 duration: _timerDuration,
+                note: noteTrimmed.isNotEmpty ? noteTrimmed : null,
+                isFavourite: _isFavourite,
               ),
               started: DateTime.now(),
             ));
