@@ -34,6 +34,13 @@ class AddFavourite extends QkrioEvent {
   const AddFavourite(this.dish);
 }
 
+class UpdateFavourite extends QkrioEvent {
+  final QkrioDish oldDish;
+  final QkrioDish newDish;
+
+  const UpdateFavourite(this.oldDish, this.newDish);
+}
+
 class DeleteFavourite extends QkrioEvent {
   final QkrioDish dish;
 

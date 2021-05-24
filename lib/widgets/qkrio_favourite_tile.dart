@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 
+import '../bloc/qkrio_bloc.dart';
 import '../models/qkrio_dish.dart';
+import 'qkrio_add_favourite_dialog.dart';
 
 class QkrioFavouriteTile extends StatefulWidget {
   final QkrioDish dish;
@@ -90,6 +92,21 @@ class _QkrioFavouriteTileState extends State<QkrioFavouriteTile> {
                   Navigator.of(context).pop();
                 },
                 child: const Text('Start timer'),
+              ),
+              CupertinoActionSheetAction(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  showCupertinoDialog(
+                      context: context,
+                      builder: (_) {
+                        return QkrioAddFavouriteDialog(
+                          initialDish: widget.dish,
+                          onAdd: (QkrioDish dish) => QkrioBloc.updateFavourite(
+                              context, widget.dish, dish),
+                        );
+                      });
+                },
+                child: const Text('Edit'),
               ),
               CupertinoActionSheetAction(
                 onPressed: () {

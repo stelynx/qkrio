@@ -51,6 +51,15 @@ class QkrioBloc extends Bloc<QkrioEvent, QkrioState> {
     BlocProvider.of<QkrioBloc>(context, listen: false).add(AddFavourite(dish));
   }
 
+  static void updateFavourite(
+    BuildContext context,
+    QkrioDish oldDish,
+    QkrioDish newDish,
+  ) {
+    BlocProvider.of<QkrioBloc>(context, listen: false)
+        .add(UpdateFavourite(oldDish, newDish));
+  }
+
   static void deleteFavourite(BuildContext context, QkrioDish dish) {
     BlocProvider.of<QkrioBloc>(context, listen: false)
         .add(DeleteFavourite(dish));
@@ -107,6 +116,11 @@ class QkrioBloc extends Bloc<QkrioEvent, QkrioState> {
       yield state.copyWith();
     } else if (event is AddFavourite) {
       state.favouriteDishes.add(event.dish);
+      await _localStorageService.saveFavourites(state.favouriteDishes);
+      yield state.copyWith();
+    } else if (event is UpdateFavourite) {
+      state.favouriteDishes[state.favouriteDishes.indexOf(event.oldDish)] =
+          event.newDish;
       await _localStorageService.saveFavourites(state.favouriteDishes);
       yield state.copyWith();
     } else if (event is DeleteFavourite) {
