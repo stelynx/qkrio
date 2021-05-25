@@ -20,4 +20,10 @@ abstract class QkrioStyle {
           .textTheme
           .textStyle
           .copyWith(fontWeight: FontWeight.w300);
+
+  static Color addaptiveLightBackgroundColor(BuildContext context) {
+    return MediaQuery.of(context).platformBrightness == Brightness.light
+        ? CupertinoColors.lightBackgroundGray
+        : CupertinoColors.systemGrey;
+  }
 }

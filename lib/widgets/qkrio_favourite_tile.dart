@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:qkrio/theme/style.dart';
 
 import '../bloc/qkrio_bloc.dart';
 import '../models/qkrio_dish.dart';
@@ -26,7 +27,9 @@ class _QkrioFavouriteTileState extends State<QkrioFavouriteTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: _isSelected ? CupertinoColors.lightBackgroundGray : null,
+      color: _isSelected
+          ? QkrioStyle.addaptiveLightBackgroundColor(context)
+          : null,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: Row(
