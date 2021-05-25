@@ -56,5 +56,5 @@ class QkrioTimer extends Equatable {
   }
 
   @override
-  List<Object?> get props => [dish, started];
+  List<Object?> get props => [dish.dishName, dish.duration, started];
 }

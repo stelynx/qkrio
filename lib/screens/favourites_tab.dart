@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:qkrio/widgets/util/separator.dart';
 
 import '../bloc/qkrio_bloc.dart';
 import '../models/qkrio_dish.dart';
@@ -8,6 +7,7 @@ import '../models/qkrio_timer.dart';
 import '../theme/style.dart';
 import '../widgets/qkrio_add_favourite_dialog.dart';
 import '../widgets/qkrio_favourite_tile.dart';
+import '../widgets/util/separator.dart';
 
 class FavouritesTab extends StatelessWidget {
   const FavouritesTab({Key? key}) : super(key: key);
@@ -90,14 +90,16 @@ class FavouritesTab extends StatelessWidget {
   QkrioFavouriteTile _favouriteTile(BuildContext context, QkrioDish dish) {
     return QkrioFavouriteTile(
       dish: dish,
-      onTimerStart: () => QkrioBloc.addTimer(
-        context,
-        QkrioTimer(
-          dish: dish,
-          started: DateTime.now(),
-        ),
-        startedFromFavourites: true,
-      ),
+      onTimerStart: () {
+        QkrioBloc.addTimer(
+          context,
+          QkrioTimer(
+            dish: dish,
+            started: DateTime.now(),
+          ),
+          startedFromFavourites: true,
+        );
+      },
       onDelete: () => QkrioBloc.deleteFavourite(context, dish),
     );
   }

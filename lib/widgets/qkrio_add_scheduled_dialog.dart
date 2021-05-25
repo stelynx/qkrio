@@ -271,6 +271,7 @@ class _QkrioAddScheduledDialogState extends State<QkrioAddScheduledDialog> {
                 dishName: _dishName,
                 duration: _duration,
                 note: _dishNote,
+                isFavourite: _isFavourite,
               ),
               timerDateTime: _timerDateTime,
               dateTimeType: _dateTimeType,
