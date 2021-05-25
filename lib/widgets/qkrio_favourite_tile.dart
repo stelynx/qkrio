@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:qkrio/theme/style.dart';
 
 import '../bloc/qkrio_bloc.dart';
 import '../models/qkrio_dish.dart';
+import '../theme/style.dart';
 import 'qkrio_add_favourite_dialog.dart';
 
 class QkrioFavouriteTile extends StatefulWidget {
