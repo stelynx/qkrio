@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
 
-const CupertinoThemeData qkrioTheme = CupertinoThemeData(
-  primaryColor: CupertinoColors.systemIndigo,
-);
+CupertinoThemeData qkrioTheme(BuildContext context) => CupertinoThemeData(
+      primaryColor: CupertinoColors.systemIndigo.resolveFrom(context),
+    );

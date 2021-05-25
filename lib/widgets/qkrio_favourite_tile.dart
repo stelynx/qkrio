@@ -59,7 +59,7 @@ class _QkrioFavouriteTileState extends State<QkrioFavouriteTile> {
                   widget.dish.presentableDuration(),
                   style: CupertinoTheme.of(context).textTheme.textStyle,
                 ),
-                const SizedBox(height: 6.0),
+                const SizedBox(height: 3.0),
               ],
             ),
             CupertinoButton(

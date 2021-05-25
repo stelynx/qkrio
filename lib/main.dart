@@ -21,7 +21,7 @@ class QkrioApp extends StatelessWidget {
     return CupertinoApp(
       title: 'Qkrio',
       debugShowCheckedModeBanner: false,
-      theme: qkrioTheme,
+      theme: qkrioTheme(context),
       home: BlocProvider(
         create: (_) => QkrioBloc(
           localStorageService: LocalStorageService(),

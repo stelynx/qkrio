@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:qkrio/widgets/util/separator.dart';
 
 import '../bloc/qkrio_bloc.dart';
 import '../models/qkrio_dish.dart';
@@ -15,21 +16,14 @@ class FavouritesTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<QkrioBloc, QkrioState>(
       builder: (context, state) {
-        final List<Widget> children =
-            state.favouriteDishes.map<Widget>((QkrioDish dish) {
-          return QkrioFavouriteTile(
-            dish: dish,
-            onTimerStart: () => QkrioBloc.addTimer(
-              context,
-              QkrioTimer(
-                dish: dish,
-                started: DateTime.now(),
-              ),
-              startedFromFavourites: true,
-            ),
-            onDelete: () => QkrioBloc.deleteFavourite(context, dish),
-          );
-        }).toList();
+        final List<Widget> children = <Widget>[];
+        if (state.favouriteDishes.isNotEmpty) {
+          children.add(_favouriteTile(context, state.favouriteDishes.first));
+          for (int i = 1; i < state.favouriteDishes.length; i++) {
+            children.add(const Separator());
+            children.add(_favouriteTile(context, state.favouriteDishes[i]));
+          }
+        }
 
         return CustomScrollView(
           physics: state.favouriteDishes.isEmpty
@@ -91,5 +85,20 @@ class FavouritesTab extends StatelessWidget {
             },
           );
         });
+  }
+
+  QkrioFavouriteTile _favouriteTile(BuildContext context, QkrioDish dish) {
+    return QkrioFavouriteTile(
+      dish: dish,
+      onTimerStart: () => QkrioBloc.addTimer(
+        context,
+        QkrioTimer(
+          dish: dish,
+          started: DateTime.now(),
+        ),
+        startedFromFavourites: true,
+      ),
+      onDelete: () => QkrioBloc.deleteFavourite(context, dish),
+    );
   }
 }

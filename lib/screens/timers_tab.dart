@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:qkrio/widgets/util/separator.dart';
 
 import '../bloc/qkrio_bloc.dart';
 import '../models/qkrio_timer.dart';
@@ -14,15 +15,15 @@ class TimersTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<QkrioBloc, QkrioState>(
       builder: (context, state) {
-        final List<Widget> children =
-            state.runningTimers.map<Widget>((QkrioTimer timer) {
-          return QkrioTimerTile(
-            qkrioTimer: timer,
-            onToggleFavourite: () =>
-                QkrioBloc.toggleFavouriteOnTimer(context, timer),
-            onDelete: () => QkrioBloc.cancelTimer(context, timer),
-          );
-        }).toList();
+        final List<Widget> children = <Widget>[];
+        if (state.runningTimers.isNotEmpty) {
+          children.add(_timerTile(context, state.runningTimers.first));
+          for (int i = 1; i < state.runningTimers.length; i++) {
+            children.add(const Separator());
+            children.add(_timerTile(context, state.runningTimers[i]));
+          }
+        }
+
         return CustomScrollView(
           physics: state.runningTimers.isEmpty
               ? const NeverScrollableScrollPhysics()
@@ -92,5 +93,13 @@ class TimersTab extends StatelessWidget {
             },
           );
         });
+  }
+
+  QkrioTimerTile _timerTile(BuildContext context, QkrioTimer timer) {
+    return QkrioTimerTile(
+      qkrioTimer: timer,
+      onToggleFavourite: () => QkrioBloc.toggleFavouriteOnTimer(context, timer),
+      onDelete: () => QkrioBloc.cancelTimer(context, timer),
+    );
   }
 }
