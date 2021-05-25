@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/qkrio_bloc.dart';
 import 'screens/favourites_tab.dart';
+import 'screens/scheduler_tab.dart';
 import 'screens/timers_tab.dart';
 import 'services/local_storage.dart';
 import 'services/notification.dart';
@@ -59,6 +60,10 @@ class QkrioHome extends StatelessWidget {
                 label: 'Timers',
               ),
               BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.alarm),
+                label: 'Scheduler',
+              ),
+              BottomNavigationBarItem(
                 icon: Icon(CupertinoIcons.star),
                 label: 'Favourites',
               ),
@@ -69,6 +74,8 @@ class QkrioHome extends StatelessWidget {
               case 0:
                 return const TimersTab();
               case 1:
+                return const SchedulerTab();
+              case 2:
                 return const FavouritesTab();
               default:
                 throw UnimplementedError();

@@ -69,9 +69,11 @@ class QkrioTimerTile extends StatelessWidget {
               ),
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 if (qkrioTimer.dish.note != null)
                   CupertinoButton(
+                    padding: EdgeInsets.zero,
                     child: const Icon(CupertinoIcons.info),
                     onPressed: () {
                       showCupertinoDialog(

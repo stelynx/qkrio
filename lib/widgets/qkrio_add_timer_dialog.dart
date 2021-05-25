@@ -4,6 +4,7 @@ import '../models/qkrio_dish.dart';
 import '../models/qkrio_timer.dart';
 import '../theme/style.dart';
 import 'util/qkrio_dialog_action.dart';
+import 'util/separator.dart';
 
 class QkrioAddTimerDialog extends StatefulWidget {
   final void Function(QkrioTimer) onAdd;
@@ -19,6 +20,9 @@ class _QkrioAddTimerDialogState extends State<QkrioAddTimerDialog> {
   String _note = '';
   Duration _timerDuration = Duration.zero;
   bool _isFavourite = false;
+
+  bool get _isValid =>
+      _timerDuration.inSeconds > 10 && _timerTitle.trim().isNotEmpty;
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +70,15 @@ class _QkrioAddTimerDialogState extends State<QkrioAddTimerDialog> {
               ),
             ],
           ),
+          if (!_isValid) ...[
+            const SizedBox(height: 10.0),
+            const Separator(),
+            const SizedBox(height: 10.0),
+            const Text(
+              'Dish name must not be empty and timer duration must be greater than 10 seconds.',
+              style: TextStyle(color: CupertinoColors.destructiveRed),
+            ),
+          ],
         ],
       ),
       actions: <QkrioDialogAction>[
@@ -78,8 +91,7 @@ class _QkrioAddTimerDialogState extends State<QkrioAddTimerDialog> {
         QkrioDialogAction(
           text: 'Start',
           isDefaultAction: true,
-          enabled:
-              _timerDuration.inSeconds > 10 && _timerTitle.trim().isNotEmpty,
+          enabled: _isValid,
           onPressed: () {
             final String noteTrimmed = _note.trim();
             widget.onAdd(QkrioTimer(

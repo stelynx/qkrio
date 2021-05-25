@@ -72,7 +72,7 @@ class _QkrioFavouriteTileState extends State<QkrioFavouriteTile> {
               ),
               onPressed: () async {
                 setState(() => _isSelected = true);
-                await _openTimerOptions();
+                await _openOptions();
                 setState(() => _isSelected = false);
               },
             ),
@@ -82,7 +82,7 @@ class _QkrioFavouriteTileState extends State<QkrioFavouriteTile> {
     );
   }
 
-  Future<void> _openTimerOptions() {
+  Future<void> _openOptions() {
     return showCupertinoModalPopup<void>(
         context: context,
         builder: (BuildContext ctx) {

@@ -28,6 +28,37 @@ class ToggleFavouriteOnTimer extends QkrioEvent {
   const ToggleFavouriteOnTimer(this.timer);
 }
 
+class AddScheduledTimer extends QkrioEvent {
+  final QkrioScheduledTimer scheduledTimer;
+
+  const AddScheduledTimer(this.scheduledTimer);
+}
+
+class UpdateScheduledTimer extends QkrioEvent {
+  final QkrioScheduledTimer oldScheduledTimer;
+  final QkrioScheduledTimer newScheduledTimer;
+
+  const UpdateScheduledTimer(this.oldScheduledTimer, this.newScheduledTimer);
+}
+
+class CancelScheduledTimer extends QkrioEvent {
+  final QkrioScheduledTimer scheduledTimer;
+
+  const CancelScheduledTimer(this.scheduledTimer);
+}
+
+class CancelAutostartOnScheduledTimer extends QkrioEvent {
+  final QkrioScheduledTimer scheduledTimer;
+
+  const CancelAutostartOnScheduledTimer(this.scheduledTimer);
+}
+
+class CancelNotifyBeforeOnScheduledTimer extends QkrioEvent {
+  final QkrioScheduledTimer scheduledTimer;
+
+  const CancelNotifyBeforeOnScheduledTimer(this.scheduledTimer);
+}
+
 class AddFavourite extends QkrioEvent {
   final QkrioDish dish;
 

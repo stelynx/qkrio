@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../models/qkrio_dish.dart';
 import '../theme/style.dart';
 import 'util/qkrio_dialog_action.dart';
+import 'util/separator.dart';
 
 class QkrioAddFavouriteDialog extends StatefulWidget {
   final QkrioDish? initialDish;
@@ -23,6 +24,9 @@ class _QkrioAddFavouriteDialogState extends State<QkrioAddFavouriteDialog> {
   String _dishName = '';
   String _note = '';
   Duration _timerDuration = Duration.zero;
+
+  bool get _isValid =>
+      _timerDuration.inSeconds > 10 && _dishName.trim().isNotEmpty;
 
   @override
   void initState() {
@@ -85,6 +89,15 @@ class _QkrioAddFavouriteDialogState extends State<QkrioAddFavouriteDialog> {
               },
             ),
           ),
+          if (!_isValid) ...[
+            const SizedBox(height: 10.0),
+            const Separator(),
+            const SizedBox(height: 10.0),
+            const Text(
+              'Dish name must not be empty and timer duration must be greater than 10 seconds.',
+              style: TextStyle(color: CupertinoColors.destructiveRed),
+            ),
+          ],
         ],
       ),
       actions: <QkrioDialogAction>[
@@ -97,7 +110,7 @@ class _QkrioAddFavouriteDialogState extends State<QkrioAddFavouriteDialog> {
         QkrioDialogAction(
           text: widget.initialDish == null ? 'Add' : 'Save',
           isDefaultAction: true,
-          enabled: _timerDuration.inSeconds > 10 && _dishName.trim().isNotEmpty,
+          enabled: _isValid,
           onPressed: () {
             final String noteTrimmed = _note.trim();
             widget.onAdd(QkrioDish(

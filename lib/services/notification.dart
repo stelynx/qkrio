@@ -2,6 +2,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+import '../models/qkrio_scheduled_timer.dart';
 import '../models/qkrio_timer.dart';
 
 class NotificationService {
@@ -83,11 +84,45 @@ class NotificationService {
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       androidAllowWhileIdle: true,
-      payload: timer.hashCode.toString(),
+      payload: notificationPayloadForTimer(timer),
     );
   }
 
   Future<void> cancelNotificationForTimer(QkrioTimer timer) async {
     await _flutterLocalNotificationsPlugin.cancel(timer.hashCode);
+  }
+
+  Future<void> scheduleNotificationForScheduledTimer(
+      QkrioScheduledTimer scheduledTimer) async {
+    if (scheduledTimer.notifyBefore != null) {
+      await _flutterLocalNotificationsPlugin.zonedSchedule(
+        scheduledTimer.hashCode,
+        'Reminder: ${scheduledTimer.dish.dishName}',
+        'Start cooking in ${scheduledTimer.notifyBefore!.presentable()}',
+        tz.TZDateTime.from(
+          scheduledTimer.start
+              .subtract(scheduledTimer.notifyBefore!.toDuration()),
+          tz.local,
+        ),
+        _notificationDetails,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        androidAllowWhileIdle: true,
+        payload: notificationPayloadForScheduled(scheduledTimer),
+      );
+    }
+  }
+
+  Future<void> cancelNotificationForScheduledTimer(
+      QkrioScheduledTimer scheduledTimer) async {
+    await _flutterLocalNotificationsPlugin.cancel(scheduledTimer.hashCode);
+  }
+
+  static String notificationPayloadForTimer(QkrioTimer timer) {
+    return 'T${timer.hashCode}';
+  }
+
+  static String notificationPayloadForScheduled(QkrioScheduledTimer timer) {
+    return 'S${timer.hashCode}';
   }
 }
