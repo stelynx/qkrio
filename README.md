@@ -11,6 +11,8 @@ Are you preparing a dish often and do not want to set timers every time from the
 
 Are your friends or family coming over for lunch and don't want to forget to start cooking in time? Set a reminder for when you want to start cooking and how much earlier you want to receive a notification. Also, you can set the time you want your dish to be cooked and Qkrio will notify you when you need to start cooking.
 
+![](assets/screenshots.png)
+
 ## Feature suggestion or bug report
 
 Every feature suggested or bug reported is highly appreciated. We are humans to and can miss an essential component that Qkrio could have, or even break something. In both cases, you can leave your response in the [Issue section](https://github.com/stelynx/qkrio/issues/new/choose).
