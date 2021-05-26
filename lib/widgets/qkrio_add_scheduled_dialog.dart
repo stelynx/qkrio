@@ -58,7 +58,7 @@ class _QkrioAddScheduledDialogState extends State<QkrioAddScheduledDialog> {
                   : _duration)
               .difference(DateTime.now())
               .inMinutes >
-          1;
+          8; // 1 minute is added due to seconds difference
 
   @override
   Widget build(BuildContext context) {
@@ -265,19 +265,23 @@ class _QkrioAddScheduledDialogState extends State<QkrioAddScheduledDialog> {
         QkrioDialogAction(
           text: widget.initialScheduledTimer == null ? 'Add' : 'Save',
           onPressed: () {
-            Navigator.of(context).pop();
-            widget.onAdd(QkrioScheduledTimer(
-              dish: QkrioDish(
-                dishName: _dishName,
-                duration: _duration,
-                note: _dishNote,
-                isFavourite: _isFavourite,
-              ),
-              timerDateTime: _timerDateTime,
-              dateTimeType: _dateTimeType,
-              notifyBefore: _notifyBefore,
-              startAutomatically: _startAutomatically,
-            ));
+            if (_isValid) {
+              Navigator.of(context).pop();
+              widget.onAdd(QkrioScheduledTimer(
+                dish: QkrioDish(
+                  dishName: _dishName,
+                  duration: _duration,
+                  note: _dishNote,
+                  isFavourite: _isFavourite,
+                ),
+                timerDateTime: _timerDateTime,
+                dateTimeType: _dateTimeType,
+                notifyBefore: _notifyBefore,
+                startAutomatically: _startAutomatically,
+              ));
+            } else {
+              setState(() {});
+            }
           },
           isDefaultAction: true,
           enabled: _isValid,
