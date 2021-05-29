@@ -36,7 +36,7 @@ class NotificationService {
     required Future<void> Function(String?) onSelectNotification,
   }) async {
     const AndroidInitializationSettings androidInitializationSettings =
-        AndroidInitializationSettings('app_icon');
+        AndroidInitializationSettings('ic_stat_name');
 
     const IOSInitializationSettings iosInitializationSettings =
         IOSInitializationSettings(
